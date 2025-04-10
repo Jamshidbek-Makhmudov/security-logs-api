@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SecurityEvent {
+  id          Int      @id @default(autoincrement())
+  clientId    String   @map("client_id")
+  userId      String   @map("user_id")
+  eventType   String   @map("event_type")
+  details     Json     @db.JsonB
+  occurredAt  DateTime @map("occurred_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([eventType], name: "event_type_idx")
+  @@index([occurredAt], name: "occurred_at_idx")
+  @@map("security_events")
+}
